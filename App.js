@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import * as firebase from "firebase";
 import {
     FIREBASE_API_KEY,
     FIREBASE_AUTH_DOMAIN,
@@ -15,6 +14,8 @@ import rootReducer from "./redux/reducers";
 import thunk from "redux-thunk";
 
 const store = createStore(rootReducer, applyMiddleware(thunk));
+
+import * as firebase from "firebase";
 
 const firebaseConfig = {
     apiKey: FIREBASE_API_KEY,
@@ -97,7 +98,15 @@ export default class App extends Component {
         } else {
             return (
                 <Provider store={store}>
-                    <MainScreen />
+                    <NavigationContainer>
+                        <Stack.Navigator initialRouteName="Main">
+                            <Stack.Screen
+                                name="Main"
+                                component={MainScreen}
+                                options={{ headerShown: false }}
+                            ></Stack.Screen>
+                        </Stack.Navigator>
+                    </NavigationContainer>
                 </Provider>
             );
         }

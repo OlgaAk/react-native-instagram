@@ -1,8 +1,14 @@
 import React, { Component } from "react";
 import { fetchUser } from "../redux/actions";
-import { View, Text } from "react-native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+
+import FeedScreen from "./main/Feed";
+
+const Tab = createBottomTabNavigator();
 
 export class Main extends Component {
     componentDidMount() {
@@ -10,17 +16,22 @@ export class Main extends Component {
     }
 
     render() {
-        const { currentUser } = this.props;
-        console.log(currentUser);
-        if (!currentUser) {
-            return <View style={{ flex: 1, justifyContent: "center" }}></View>;
-        }
         return (
-            <View style={{ flex: 1, justifyContent: "center" }}>
-                <Text style={{ textAlign: "center" }}>
-                    Hello {currentUser.name}
-                </Text>
-            </View>
+            <Tab.Navigator>
+                <Tab.Screen
+                    name="Feed"
+                    component={FeedScreen}
+                    options={{
+                        tabBarIcon: ({ color, size }) => (
+                            <MaterialCommunityIcons
+                                name="home"
+                                color={color}
+                                size={26}
+                            />
+                        )
+                    }}
+                />
+            </Tab.Navigator>
         );
     }
 }
