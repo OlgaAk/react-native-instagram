@@ -1,5 +1,6 @@
 import { USER_STATE_CHANGE } from "../constants/index";
-import firebase from "firebase";
+import * as firebase from "firebase";
+import "firebase/firestore";
 
 export function fetchUser() {
     return (dispatch) => {
