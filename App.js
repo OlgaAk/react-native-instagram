@@ -37,6 +37,7 @@ import LandingScreen from "./components/auth/Landing";
 import RegisterScreen from "./components/auth/Register";
 import LoginScreen from "./components/auth/Login";
 import MainScreen from "./components/Main";
+import AddScreen from "./components/main/Add";
 
 const Stack = createStackNavigator();
 
@@ -104,6 +105,10 @@ export default class App extends Component {
                                 name="Main"
                                 component={MainScreen}
                                 options={{ headerShown: false }}
+                            ></Stack.Screen>
+                            <Stack.Screen
+                                name="Add"
+                                component={AddScreen}
                             ></Stack.Screen>
                         </Stack.Navigator>
                     </NavigationContainer>
