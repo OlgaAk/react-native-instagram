@@ -8,6 +8,7 @@ import { bindActionCreators } from "redux";
 
 import FeedScreen from "./main/Feed";
 import ProfileScreen from "./main/Profile";
+import SearchScreen from "./main/Search";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -41,6 +42,21 @@ export class Main extends Component {
                         )
                     }}
                 />
+                <Tab.Screen
+                    name="Search"
+                    component={SearchScreen}
+                    navigation={this.props.navigation}
+                    options={{
+                        tabBarIcon: ({ color, size }) => (
+                            <MaterialCommunityIcons
+                                name="magnify"
+                                color={color}
+                                size={26}
+                            />
+                        )
+                    }}
+                />
+
                 <Tab.Screen
                     name="Add "
                     component={EmptyScreen} //to make project compile, add component is needed not here but in app.js
