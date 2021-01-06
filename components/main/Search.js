@@ -34,7 +34,9 @@ export default function Search(props) {
     const searchItem = ({ item }) => {
         return (
             <TouchableOpacity
-                onPress={props.navigation.navigate("Profile", { item })}
+                onPress={() => {
+                    props.navigation.navigate("Profile", { user: item });
+                }}
             >
                 <Text>{item.name}</Text>
             </TouchableOpacity>
