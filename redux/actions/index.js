@@ -11,9 +11,12 @@ export function fetchUser() {
             .get()
             .then((snapshot) => {
                 if (snapshot.exists) {
+                    const data = snapshot.data();
+                    const id = snapshot.id;
+                    let user = { id, ...data };
                     dispatch({
                         type: USER_STATE_CHANGE,
-                        currentUser: snapshot.data()
+                        currentUser: user
                     });
                 } else {
                     console.log("User does not exist");

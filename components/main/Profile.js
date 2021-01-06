@@ -4,19 +4,31 @@ import { connect } from "react-redux";
 import firebase from "firebase";
 
 const Profile = (props) => {
+    let routeParams = props.route.params;
+    console.log(props.route);
+    const { currentUser, posts } = props;
     const [user, setUser] = useState(null);
     const [userPosts, setUserPosts] = useState([]);
+
+    if (routeParams) {
+        // solves issue with ussefect not accepting undefined if navigated directly with no params
+        console.log(routeParams);
+    } else {
+        routeParams = {};
+    }
+
     useEffect(() => {
-        const { currentUser, posts } = props;
-        console.log(currentUser, props.route.params);
-        if (currentUser.email == props.route.params.user.email) {
-            setUser(currentUser);
-            setUserPosts(posts);
-        } else {
-            setUser(props.route.params.user);
-            fetchPosts(props.route.params.user.id);
+        setUser(currentUser);
+        setUserPosts(posts);
+        // if navigated from search
+        if ("user" in routeParams) {
+            // if searched profile is different from current user
+            if (currentUser.id != routeParams.user.id) {
+                setUser(routeParams.user);
+                fetchPosts(routeParams.user.id);
+            }
         }
-    }, [props.route.params.user]);
+    }, [routeParams]);
 
     const fetchPosts = (uid) => {
         firebase

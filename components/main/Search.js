@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import {
+    StyleSheet,
     View,
     Text,
     TextInput,
@@ -44,7 +45,7 @@ export default function Search(props) {
     };
 
     return (
-        <View>
+        <View style={styles.container}>
             <TextInput
                 placeholder="Search"
                 onChangeText={(search) => fetchUsers(search)}
@@ -58,3 +59,10 @@ export default function Search(props) {
         </View>
     );
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        marginTop: 40
+    }
+});
