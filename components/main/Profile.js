@@ -6,10 +6,11 @@ import firebase from "firebase";
 const Profile = (props) => {
     let routeParams = props.route.params;
     console.log(props.route);
-    const { currentUser, posts } = props;
+    const { currentUser, posts, following } = props;
     const [user, setUser] = useState(null);
     const [userPosts, setUserPosts] = useState([]);
-    const [following, setFollowing] = useState(false);
+    const [isFollowing, setIsFollowing] = useState(false);
+    const [userFollowing, setUserFollowing] = useState([]);
 
     if (!routeParams) {
         // solves issue with ussefect not accepting undefined if navigated directly with no params
@@ -19,12 +20,16 @@ const Profile = (props) => {
     useEffect(() => {
         setUser(currentUser);
         setUserPosts(posts);
+        setUserPosts(posts);
+        setUserFollowing(following);
         // if navigated from search
         if ("user" in routeParams) {
             // if searched profile is different from current user
-            if (currentUser.id != routeParams.user.id) {
+            let id = routeParams.user.id;
+            if (currentUser.id != id) {
                 setUser(routeParams.user);
-                fetchPosts(routeParams.user.id);
+                fetchPosts(id);
+                fetchFollowing(id);
             }
         }
     }, [routeParams]);
@@ -48,6 +53,22 @@ const Profile = (props) => {
             });
     };
 
+    const fetchFollowing = (uid) => {
+        firebase
+            .firestore()
+            .collection("following")
+            .doc(uid)
+            .collection("userFollowing")
+            .get()
+            .then((snapshot) => {
+                console.log("__________________________");
+                let following = snapshot.docs.map((doc) => {
+                    return doc.id;
+                });
+                setUserFollowing(following);
+            });
+    };
+
     const onFollow = () => {
         firebase
             .firestore()
@@ -57,7 +78,7 @@ const Profile = (props) => {
             .doc(user.id)
             .set({})
             .then(() => {
-                setFollowing(true);
+                setIsFollowing(true);
             });
     };
 
@@ -70,7 +91,7 @@ const Profile = (props) => {
             .doc(user.id)
             .delete()
             .then(() => {
-                setFollowing(false);
+                setIsFollowing(false);
             });
     };
 
@@ -87,10 +108,12 @@ const Profile = (props) => {
                 <View style={styles.containerInfo}>
                     <Text>{user.name}</Text>
                     <Text>{user.email}</Text>
+                    <Text>Following: {userFollowing.length}</Text>
                     {
-                        routeParams && routeParams.user.id != currentUser.id ? ( // if profile of another user
+                        Object.keys(routeParams).length > 0 && // if route params are defined
+                        routeParams.user.id != currentUser.id ? ( // if profile of another user
                             <View>
-                                {following ? (
+                                {isFollowing ? (
                                     <Button
                                         style={styles.followButton}
                                         title="Following"
@@ -145,7 +168,8 @@ const styles = StyleSheet.create({
 
 const mapStateToProps = (store) => ({
     currentUser: store.userState.currentUser,
-    posts: store.userState.posts
+    posts: store.userState.posts,
+    following: store.userState.following
 });
 
 export default connect(mapStateToProps, null)(Profile);
