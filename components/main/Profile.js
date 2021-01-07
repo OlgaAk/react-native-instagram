@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Text, Image, FlatList } from "react-native";
+import { StyleSheet, View, Text, Image, FlatList, Button } from "react-native";
 import { connect } from "react-redux";
 import firebase from "firebase";
 
@@ -9,6 +9,7 @@ const Profile = (props) => {
     const { currentUser, posts } = props;
     const [user, setUser] = useState(null);
     const [userPosts, setUserPosts] = useState([]);
+    const [following, setFollowing] = useState(false);
 
     if (routeParams) {
         // solves issue with ussefect not accepting undefined if navigated directly with no params
@@ -49,6 +50,14 @@ const Profile = (props) => {
             });
     };
 
+    const follow = () => {
+        setFollowing(true);
+    };
+
+    const unFollow = () => {
+        setFollowing(false);
+    };
+
     const renderItem = ({ item }) => (
         <View style={styles.containerImage}>
             <Image style={styles.image} source={{ uri: item.imageUrl }} />
@@ -56,11 +65,31 @@ const Profile = (props) => {
     );
 
     if (user) {
+        // initially user is undefined
         return (
             <View style={styles.container}>
                 <View style={styles.containerInfo}>
                     <Text>{user.name}</Text>
                     <Text>{user.email}</Text>
+                    {
+                        routeParams && routeParams.user.id != currentUser.id ? ( // if profile of another user
+                            <View>
+                                {following ? (
+                                    <Button
+                                        style={styles.followButton}
+                                        title="Following"
+                                        onPress={() => unFollow()}
+                                    />
+                                ) : (
+                                    <Button
+                                        style={styles.followButton}
+                                        title="Follow"
+                                        onPress={() => follow()}
+                                    />
+                                )}
+                            </View>
+                        ) : null //display no button if own profile
+                    }
                 </View>
                 <View style={styles.containerGallery}>
                     <FlatList
@@ -91,7 +120,11 @@ const styles = StyleSheet.create({
     containerImage: {
         flex: 1 / 3
     },
-    image: { flex: 1, aspectRatio: 1 / 1 }
+    image: { flex: 1, aspectRatio: 1 / 1 },
+    followButton: {
+        width: 20,
+        height: 10
+    }
 });
 
 const mapStateToProps = (store) => ({
