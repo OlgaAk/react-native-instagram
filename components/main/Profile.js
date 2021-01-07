@@ -11,10 +11,8 @@ const Profile = (props) => {
     const [userPosts, setUserPosts] = useState([]);
     const [following, setFollowing] = useState(false);
 
-    if (routeParams) {
+    if (!routeParams) {
         // solves issue with ussefect not accepting undefined if navigated directly with no params
-        console.log(routeParams);
-    } else {
         routeParams = {};
     }
 
@@ -37,25 +35,43 @@ const Profile = (props) => {
             .collection("posts")
             .doc(uid)
             .collection("userPosts")
-            .orderBy("creation", "asc")
+            .orderBy("creation", "asc") // new posts first
             .get()
             .then((snapshot) => {
                 console.log("__________________________");
                 let posts = snapshot.docs.map((doc) => {
                     const data = doc.data();
-                    const id = doc.id;
+                    const id = doc.id; // id is not in data, should be taken separately
                     return { id, ...data };
                 });
                 setUserPosts(posts);
             });
     };
 
-    const follow = () => {
-        setFollowing(true);
+    const onFollow = () => {
+        firebase
+            .firestore()
+            .collection("following")
+            .doc(currentUser.id)
+            .collection("userFollowing")
+            .doc(user.id)
+            .set({})
+            .then(() => {
+                setFollowing(true);
+            });
     };
 
-    const unFollow = () => {
-        setFollowing(false);
+    const onUnFollow = () => {
+        firebase
+            .firestore()
+            .collection("following")
+            .doc(currentUser.id)
+            .collection("userFollowing")
+            .doc(user.id)
+            .delete()
+            .then(() => {
+                setFollowing(false);
+            });
     };
 
     const renderItem = ({ item }) => (
@@ -78,13 +94,13 @@ const Profile = (props) => {
                                     <Button
                                         style={styles.followButton}
                                         title="Following"
-                                        onPress={() => unFollow()}
+                                        onPress={() => onUnFollow()}
                                     />
                                 ) : (
                                     <Button
                                         style={styles.followButton}
                                         title="Follow"
-                                        onPress={() => follow()}
+                                        onPress={() => onFollow()}
                                     />
                                 )}
                             </View>
