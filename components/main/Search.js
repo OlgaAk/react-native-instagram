@@ -8,9 +8,24 @@ import {
     TouchableOpacity
 } from "react-native";
 import firebase from "firebase";
+import UserPage from "./UserPage";
+
 require("firebase/firestore");
 
-export default function Search(props) {
+import { createStackNavigator } from "@react-navigation/stack";
+
+const SearchStack = createStackNavigator();
+
+export default function SearchStackScreen() {
+    return (
+        <SearchStack.Navigator>
+            <SearchStack.Screen name="Search" component={Search} />
+            <SearchStack.Screen name="UserPage" component={UserPage} />
+        </SearchStack.Navigator>
+    );
+}
+
+export function Search({ navigation }) {
     const [users, setUsers] = useState([]);
     const fetchUsers = (search) => {
         if (search) {
@@ -37,7 +52,10 @@ export default function Search(props) {
             <TouchableOpacity
                 onPress={() => {
                     console.log(item);
-                    props.navigation.navigate("Profile", { user: item });
+                    navigation.navigate("UserPage", {
+                        user: item,
+                        navigation: navigation
+                    });
                 }}
             >
                 <Text>{item.name}</Text>

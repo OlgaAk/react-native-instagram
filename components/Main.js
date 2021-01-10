@@ -13,7 +13,7 @@ import { bindActionCreators } from "redux";
 
 import FeedScreen from "./main/Feed";
 import ProfileScreen from "./main/Profile";
-import SearchScreen from "./main/Search";
+import SearchStackScreen from "./main/Search";
 
 const Tab = createMaterialBottomTabNavigator();
 
@@ -50,9 +50,16 @@ export class Main extends Component {
                     }}
                 />
                 <Tab.Screen
-                    name="Search"
-                    component={SearchScreen}
-                    navigation={this.props.navigation}
+                    name="SearchStackScreen"
+                    component={SearchStackScreen}
+                    // navigation={this.props.navigation}
+                    listeners={({ navigation }) => ({
+                        tabPress: (event) => {
+                            navigation.navigate("SearchStackScreen", {
+                                screen: "Search"
+                            }); // navigation logic in app.js
+                        }
+                    })}
                     options={{
                         tabBarIcon: ({ color, size }) => (
                             <MaterialCommunityIcons

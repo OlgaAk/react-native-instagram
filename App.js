@@ -39,7 +39,6 @@ import LoginScreen from "./components/auth/Login";
 import MainScreen from "./components/Main";
 import AddScreen from "./components/main/Add";
 import SaveScreen from "./components/main/Save";
-import UserProfile from "./components/main/UserProfile";
 
 const Stack = createStackNavigator();
 
@@ -117,11 +116,6 @@ export default class App extends Component {
                                 name="Save"
                                 component={SaveScreen}
                                 navigation={this.props.navigation} // allows passing arguments to feed screen
-                            ></Stack.Screen>
-                            <Stack.Screen
-                                name="UserProfile"
-                                component={UserProfile}
-                                options={{ headerShown: true }}
                             ></Stack.Screen>
                         </Stack.Navigator>
                     </NavigationContainer>

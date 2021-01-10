@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, Image, FlatList, Button } from "react-native";
 import { connect } from "react-redux";
 import firebase from "firebase";
 
-const UserProfile = (props) => {
+const UserPage = (props) => {
     const { currentUser, posts, following } = props;
     const [user, setUser] = useState(null);
     const [userPosts, setUserPosts] = useState([]);
@@ -17,7 +17,7 @@ const UserProfile = (props) => {
             fetchPosts(id);
             fetchFollowing(id);
             if (following.includes(id)) setIsFollowing(true);
-        }
+        } else props.navigation.navigate("Profile");
     }, [props]);
 
     const fetchPosts = (uid) => {
@@ -96,24 +96,21 @@ const UserProfile = (props) => {
                     <Text>{user.email}</Text>
                     <Text>Following: {userFollowing.length}</Text>
                     {
-                        Object.keys(routeParams).length > 0 && // if route params are defined
-                        routeParams.user.id != currentUser.id ? ( // if profile of another user
-                            <View>
-                                {isFollowing ? (
-                                    <Button
-                                        style={styles.followButton}
-                                        title="Following"
-                                        onPress={() => onUnFollow()}
-                                    />
-                                ) : (
-                                    <Button
-                                        style={styles.followButton}
-                                        title="Follow"
-                                        onPress={() => onFollow()}
-                                    />
-                                )}
-                            </View>
-                        ) : null //display no button if own profile
+                        <View>
+                            {isFollowing ? (
+                                <Button
+                                    style={styles.followButton}
+                                    title="Following"
+                                    onPress={() => onUnFollow()}
+                                />
+                            ) : (
+                                <Button
+                                    style={styles.followButton}
+                                    title="Follow"
+                                    onPress={() => onFollow()}
+                                />
+                            )}
+                        </View>
                     }
                 </View>
                 <View style={styles.containerGallery}>
@@ -158,4 +155,4 @@ const mapStateToProps = (store) => ({
     following: store.userState.following
 });
 
-export default connect(mapStateToProps, null)(UserProfile);
+export default connect(mapStateToProps, null)(UserPage);
