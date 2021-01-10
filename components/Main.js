@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import {
     fetchUser,
     fetchUserPosts,
-    fetchUserFollowing
+    fetchUserFollowing,
+    clearData
 } from "../redux/actions";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -22,6 +23,7 @@ const EmptyScreen = () => {
 
 export class Main extends Component {
     componentDidMount() {
+        this.props.clearData();
         this.props.fetchUser();
         this.props.fetchUserPosts();
         this.props.fetchUserFollowing();
@@ -104,7 +106,7 @@ const mapStoreToState = (store) => ({
 });
 const mapDispatchToProps = (dispatch) =>
     bindActionCreators(
-        { fetchUser, fetchUserPosts, fetchUserFollowing },
+        { fetchUser, fetchUserPosts, fetchUserFollowing, clearData },
         dispatch
     );
 

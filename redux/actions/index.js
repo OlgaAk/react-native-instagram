@@ -1,10 +1,17 @@
 import {
     USER_STATE_CHANGE,
     USER_POSTS_STATE_CHANGE,
-    USER_FOLLOWING_STATE_CHANGE
+    USER_FOLLOWING_STATE_CHANGE,
+    CLEAR_DATA
 } from "../constants";
 import * as firebase from "firebase";
 import "firebase/firestore";
+
+export function clearData() {
+    return (dispatch) => {
+        dispatch({ type: CLEAR_DATA });
+    };
+}
 
 export function fetchUser() {
     return (dispatch) => {
