@@ -36,6 +36,7 @@ export default function Search(props) {
         return (
             <TouchableOpacity
                 onPress={() => {
+                    console.log(item);
                     props.navigation.navigate("Profile", { user: item });
                 }}
             >

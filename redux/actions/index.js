@@ -64,8 +64,8 @@ export function fetchUserFollowing() {
             .collection("following")
             .doc(firebase.auth().currentUser.uid)
             .collection("userFollowing")
-            .get()
-            .then((snapshot) => {
+            .onSnapshot((snapshot) => {
+                // instead og get, to recieve updates
                 console.log("__________________________");
                 let following = snapshot.docs.map((doc) => {
                     return doc.id;
@@ -75,9 +75,6 @@ export function fetchUserFollowing() {
                     type: USER_FOLLOWING_STATE_CHANGE,
                     following: following
                 });
-            })
-            .catch((error) => {
-                console.log("Error getting following" + error);
             });
     };
 }
